@@ -54,7 +54,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5500")); //데이터보냄
+                        configuration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500")); //데이터보냄
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
