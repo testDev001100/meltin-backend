@@ -2,6 +2,7 @@ package com.meltin.meltinbackend.controller;
 
 import com.meltin.meltinbackend.dto.JoinDTO;
 import com.meltin.meltinbackend.service.JoinService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +17,8 @@ public class JoinController {
     }
 
     @PostMapping("/api/users") //회원가입
-    public String usersProcess(@RequestBody JoinDTO joinDTO) {
-
+    public ResponseEntity<JoinResponse> usersProcess(@RequestBody JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
-
-        return "Users processed";
+        return ResponseEntity.ok(new JoinResponse("회원가입 성공"));
     }
 }
