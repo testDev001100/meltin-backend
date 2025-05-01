@@ -78,23 +78,21 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
 
         http
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+        http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/","/api/users","/api/users/login").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class); // 검증
-
-
-        http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        //세션 설정 **
+
         http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         return  http.build();
     }

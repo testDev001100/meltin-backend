@@ -1,14 +1,12 @@
 package com.meltin.meltinbackend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
-public class JoinDTO {
-
+@AllArgsConstructor
+public class MyPageDTO {
     private String username;
-    private String password;
     private String studentId;
     private String name;
 }

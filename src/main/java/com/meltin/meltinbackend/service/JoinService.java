@@ -26,13 +26,14 @@ public class JoinService {
 
         if (isExists) {
 
-            return;
+            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
         }
         //회원정보 저장
         UserEntity data = new UserEntity();
-
         data.setUsername(username);
         data.setPassword(bCryptPasswordEncoder.encode(password));
+        data.setStduentId(joinDTO.getStudentId());
+        data.setName(joinDTO.getName());
         if ("admin".equals(username)) {
             data.setRole("ROLE_ADMIN");
         } else {
