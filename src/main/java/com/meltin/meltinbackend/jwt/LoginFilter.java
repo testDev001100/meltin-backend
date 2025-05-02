@@ -1,5 +1,6 @@
     package com.meltin.meltinbackend.jwt;
 
+    import com.fasterxml.jackson.databind.ObjectMapper;
     import com.meltin.meltinbackend.service.security.CustomUserDetails;
     import jakarta.servlet.FilterChain;
     import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +12,10 @@
     import org.springframework.security.core.GrantedAuthority;
     import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+    import java.io.IOException;
     import java.util.Collection;
     import java.util.Iterator;
+    import java.util.Map;
 
     public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -29,14 +32,20 @@
         @Override
         public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-            String username = obtainUsername(request);
-            String password = obtainPassword(request);
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, String> jsonRequest = objectMapper.readValue(request.getInputStream(), Map.class);
 
-            System.out.println(username);
+                String username = jsonRequest.get("username");
+                String password = jsonRequest.get("password");
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(username, password, null);
 
-            return authenticationManager.authenticate(authToken);
+                return authenticationManager.authenticate(authToken);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override

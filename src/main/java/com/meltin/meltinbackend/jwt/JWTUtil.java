@@ -16,6 +16,8 @@ public class JWTUtil {
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
 
+        System.out.println("JWT secret key = " + secret);
+
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
