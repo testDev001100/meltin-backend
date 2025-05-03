@@ -3,6 +3,7 @@ package com.meltin.meltinbackend.config;
 import com.meltin.meltinbackend.jwt.JWTFilter;
 import com.meltin.meltinbackend.jwt.JWTUtil;
 import com.meltin.meltinbackend.jwt.LoginFilter;
+import com.meltin.meltinbackend.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +28,12 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserRepository userRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Bean
@@ -92,7 +95,7 @@ public class SecurityConfig {
 
 
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class);
 
         return  http.build();
     }
