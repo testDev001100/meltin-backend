@@ -1,5 +1,6 @@
 package com.meltin.meltinbackend.jwt;
 
+import com.meltin.meltinbackend.repository.UserRepository;
 import com.meltin.meltinbackend.service.security.CustomUserDetails;
 import com.meltin.meltinbackend.entity.UserEntity;
 import jakarta.servlet.FilterChain;
@@ -16,9 +17,11 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -41,12 +44,12 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        UserEntity userEntity = userRepository.findByUsername(username);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(username);
-        userEntity.setPassword("kimpassword");//강제로 생성
-        userEntity.setRole(role);
+        if (userEntity == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 

@@ -28,9 +28,8 @@ public class UserService {
         if (!passwordEncoder.matches(dto.getCurrentPassword(),user.getPassword())) {
             throw new IllegalArgumentException("Current password is incorrect");
         }
-        String newEncoded = passwordEncoder.encode(dto.getCurrentPassword());
-        user.setPassword(newEncoded);
-
+        String newEncodedPassword = passwordEncoder.encode(dto.getNewPassword());
+        user.setPassword(newEncodedPassword);
         userRepository.save(user);
     }
     @Transactional
