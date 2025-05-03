@@ -36,9 +36,13 @@ public class SurveyService {
         response.setUser(user);
         response.setStudentId(dto.getStudentId());
         response.setMbti(dto.getMbti());
-        response.setPersonality(dto.getPersonality());
         response.setCommunicationStyle(dto.getCommunicationStyle());
-        response.setInterests(dto.getInterests());
+        response.setInterests(dto.getInterest());
+        response.setConflictResponse(dto.getConflictResponse());
+        response.setPreferredRole(dto.getPreferredRole());
+        response.setPreferredTeamMood(dto.getPreferredTeamMood());
+        response.setSelfKeywords(String.join(",", dto.getSelfKeywords())); // ✅ CSV 저장
+        response.setMatchingPreference(dto.getMatchingPreference());
 
         surveyResponseRepository.save(response);
         return ResponseEntity.ok("설문 제출 성공");

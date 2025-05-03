@@ -1,6 +1,10 @@
 package com.meltin.meltinbackend.controller;
 
 import com.meltin.meltinbackend.dto.SurveyRequestDto;
+import com.meltin.meltinbackend.entity.SurveyResponseEntity;
+import com.meltin.meltinbackend.entity.UserEntity;
+import com.meltin.meltinbackend.repository.SurveyResponseRepository;
+import com.meltin.meltinbackend.repository.UserRepository;
 import com.meltin.meltinbackend.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/survey")
 @RequiredArgsConstructor
 public class SurveyController {
+
     private final SurveyService surveyService;
 
     @PostMapping
-    public ResponseEntity<?> submitSurvey(@RequestHeader("Authorization") String token,
-                                          @RequestBody SurveyRequestDto dto) {
-        String pureToken = token.replace("Bearer ", "");
-        return surveyService.submitSurvey(pureToken, dto);
+    public ResponseEntity<?> submitSurvey(
+            @RequestHeader("Authorization") String token,
+            @RequestBody SurveyRequestDto dto) {
+
+        String jwt = token.replace("Bearer ", "");
+        return surveyService.submitSurvey(jwt, dto);
     }
 }

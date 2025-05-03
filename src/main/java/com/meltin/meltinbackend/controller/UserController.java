@@ -35,7 +35,7 @@ public class UserController {
 
         return  new MyPageDTO(
                 user.getUsername(),
-                user.getStduentId(),
+                user.getStudentId(),
                 user.getName()
         );
     }

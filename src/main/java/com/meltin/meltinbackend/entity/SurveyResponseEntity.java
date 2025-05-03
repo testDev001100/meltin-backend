@@ -22,7 +22,16 @@ public class SurveyResponseEntity {
 
     private String studentId;
     private String mbti;
-    private String personality;
-    private String communicationStyle;
+
+    @Column(length = 500)
     private String interests;
+
+    private String communicationStyle;
+    private String conflictResponse;
+    private String preferredRole;
+    private String preferredTeamMood;
+    @Column(length = 255)
+    private String selfKeywords;
+
+    private String matchingPreference;
 }

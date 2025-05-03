@@ -9,9 +9,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SurveyRequestDto {
 
+    private Long userId;
     private String studentId;
     private String mbti;
-    private String personality;
+    private String interest;
     private String communicationStyle;
-    private String interests;
+    private String conflictResponse;
+    private String preferredRole;
+    private String preferredTeamMood;
+    private String selfKeywords;
+    private String matchingPreference;
 }
