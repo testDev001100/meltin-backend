@@ -9,6 +9,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import static javax.crypto.Cipher.SECRET_KEY;
+
 @Component
 public class JWTUtil {
 
@@ -44,6 +46,15 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) //소멸시간
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("username", String.class);
     }
 
 }

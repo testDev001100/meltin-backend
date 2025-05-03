@@ -32,7 +32,7 @@ public class JoinService {
         UserEntity data = new UserEntity();
         data.setUsername(username);
         data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setStduentId(joinDTO.getStudentId());
+        data.setStudentId(joinDTO.getStudentId());
         data.setName(joinDTO.getName());
         if ("admin".equals(username)) {
             data.setRole("ROLE_ADMIN");
