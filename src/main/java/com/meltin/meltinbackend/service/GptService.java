@@ -37,7 +37,7 @@ public class GptService {
                     dto.getSelfKeyword(), dto.getMatchingPreference()
                     ));
         }
-        prompt.append("\\n출력 형식:\\nTeam 1: 이름1, 이름2, ...\\nTeam 2: ...");
+        prompt.append("\n출력 형식:\nTeam 1: 이름1, 이름2, ...\nTeam 2: ...");
         return prompt.toString();
     }
 
@@ -48,7 +48,7 @@ public class GptService {
 
         Map<String, Object> body = new HashMap<>();
         body.put("model", "gpt-4");
-        body.put("message", List.of(
+        body.put("messages", List.of(
                 Map.of("role", "user", "content", prompt)));
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(

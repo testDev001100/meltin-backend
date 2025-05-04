@@ -21,6 +21,7 @@ public class GroupService {
                 String[] names = line.substring(line.indexOf(":") + 1).split(",");
                 for (String rawName : names) {
                     String name = rawName.trim();
+                    System.out.println("GPT 이름 추출: '" + name + "'");
                     Optional<UserEntity> userOpt = userRepository.findByName(name);
                     userOpt.ifPresent(user -> {
                         user.setTeamNumber(teamNumber);

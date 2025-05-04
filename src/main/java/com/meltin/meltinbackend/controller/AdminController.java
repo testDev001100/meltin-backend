@@ -26,8 +26,11 @@ public class AdminController {
 
     @PostMapping("/match")
     public ResponseEntity<String> match(@RequestHeader("Authorization") String token) {
+
+        String jwt = token.replace("Bearer ", "").trim();
+
         UserEntity admin = jwtUtil.getUserFromToken(token);
-        if (!admin.getRole().equals("ADMIN")) {
+        if (!admin.getRole().equals("ROLE_ADMIN")) {
             return ResponseEntity.status(403).body("접근 불가: 관리자 권한 필요");
         }
 

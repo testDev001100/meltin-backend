@@ -63,8 +63,12 @@ public class JWTUtil {
     }
 
     public UserEntity getUserFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         String username = getUsername(token);
         UserEntity user = userRepository.findByUsername(username);
+
         if (user == null) {
             throw new RuntimeException("해당 사용자를 찾을 수 없습니다.");
         }
