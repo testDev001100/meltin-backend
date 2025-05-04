@@ -21,4 +21,7 @@ public class UserEntity {
     private String role;
     private String studentId;
     private String name;
+
+    private Integer teamNumber;
+
 }

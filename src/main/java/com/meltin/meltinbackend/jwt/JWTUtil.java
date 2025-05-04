@@ -1,5 +1,7 @@
 package com.meltin.meltinbackend.jwt;
 
+import com.meltin.meltinbackend.entity.UserEntity;
+import com.meltin.meltinbackend.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,11 +16,14 @@ import static javax.crypto.Cipher.SECRET_KEY;
 @Component
 public class JWTUtil {
 
+    private final UserRepository userRepository;
+
     private SecretKey secretKey;
 
-    public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret, UserRepository userRepository) {
 
         System.out.println("JWT secret key = " + secret);
+        this.userRepository = userRepository;
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
@@ -55,6 +60,15 @@ public class JWTUtil {
                 .parseSignedClaims(token)
                 .getPayload()
                 .get("username", String.class);
+    }
+
+    public UserEntity getUserFromToken(String token) {
+        String username = getUsername(token);
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("해당 사용자를 찾을 수 없습니다.");
+        }
+        return user;
     }
 
 }
