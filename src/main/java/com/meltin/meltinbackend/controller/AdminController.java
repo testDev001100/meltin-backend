@@ -4,8 +4,9 @@ import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
 import com.meltin.meltinbackend.jwt.JWTUtil;
 import com.meltin.meltinbackend.repository.SurveyResponseRepository;
-import com.meltin.meltinbackend.service.group.GptService;
-import com.meltin.meltinbackend.service.group.GroupService;
+import com.meltin.meltinbackend.repository.UserRepository;
+import com.meltin.meltinbackend.service.GptService;
+import com.meltin.meltinbackend.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final SurveyResponseRepository surveyResponseRepository;
-    private final GptService gptService;
+    private final UserRepository userRepository;
     private final GroupService groupService;
+    private final GptService gptService;
     private final JWTUtil jwtUtil;
 
     @PostMapping("/match")

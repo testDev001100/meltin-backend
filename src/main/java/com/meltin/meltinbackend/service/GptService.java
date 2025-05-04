@@ -1,6 +1,5 @@
-package com.meltin.meltinbackend.service.group;
+package com.meltin.meltinbackend.service;
 
-import com.meltin.meltinbackend.dto.GptSurveyDto;
 import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.meltin.meltinbackend.dto.GptSurveyDto;
+
 
 import java.util.HashMap;
 import java.util.List;

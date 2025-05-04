@@ -1,4 +1,4 @@
-package com.meltin.meltinbackend.service.group;
+package com.meltin.meltinbackend.service;
 
 import com.meltin.meltinbackend.entity.UserEntity;
 import com.meltin.meltinbackend.repository.UserRepository;
