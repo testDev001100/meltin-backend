@@ -6,6 +6,7 @@ import com.meltin.meltinbackend.entity.UserEntity;
 import com.meltin.meltinbackend.repository.UserRepository;
 import com.meltin.meltinbackend.service.UserService;
 import com.meltin.meltinbackend.service.security.CustomUserDetails;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

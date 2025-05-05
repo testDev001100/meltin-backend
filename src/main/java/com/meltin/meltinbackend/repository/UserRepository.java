@@ -4,6 +4,7 @@ import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
@@ -16,5 +17,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     void deleteByUsername(String username);
 
     Optional<UserEntity> findByName(String name);
+
+    List<UserEntity> findAllByTeamNumber(Integer teamNumber);
+
 
 }
