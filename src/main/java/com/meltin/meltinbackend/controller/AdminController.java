@@ -1,5 +1,6 @@
 package com.meltin.meltinbackend.controller;
 
+import com.meltin.meltinbackend.dto.MyPageDTO;
 import com.meltin.meltinbackend.dto.SurveyResponseDto;
 import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
@@ -11,6 +12,7 @@ import com.meltin.meltinbackend.service.GroupService;
 import com.meltin.meltinbackend.service.SurveyService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/admin")
@@ -111,6 +114,33 @@ public class AdminController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(Map.of("users", users));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getAdminInfo(HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        if (token == null || !jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        }
+
+        String role = jwtUtil.getRole(token);
+        if (!"ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 없습니다.");
+        }
+
+        String username = jwtUtil.getUsername(token);
+        UserEntity admin = userRepository.findByUsername(username);
+
+        if (admin == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보를 찾을 수 없습니다.");
+        }
+        MyPageDTO dto = new MyPageDTO(
+                admin.getUsername(),
+                admin.getStudentId(),
+                admin.getRole()
+        );
+
+        return ResponseEntity.ok(dto);
     }
 }
 
