@@ -3,6 +3,7 @@ package com.meltin.meltinbackend.config;
 import com.meltin.meltinbackend.jwt.JWTFilter;
 import com.meltin.meltinbackend.jwt.JWTUtil;
 import com.meltin.meltinbackend.jwt.LoginFilter;
+import com.meltin.meltinbackend.repository.BlacklistedTokenRepository;
 import com.meltin.meltinbackend.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -29,11 +30,15 @@ public class SecurityConfig {
 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
+    private final BlacklistedTokenRepository blacklistedTokenRepository; // ✅ 이거 반드시 있어야 함
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserRepository userRepository) {
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserRepository userRepository, BlacklistedTokenRepository blacklistedTokenRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
+        this.blacklistedTokenRepository = blacklistedTokenRepository;
+
     }
 
     @Bean
@@ -47,7 +52,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JWTUtil jWTUtil) throws Exception {
 
         http
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -95,7 +100,7 @@ public class SecurityConfig {
 
 
         http
-                .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, userRepository, blacklistedTokenRepository), LoginFilter.class);
 
         return  http.build();
     }
