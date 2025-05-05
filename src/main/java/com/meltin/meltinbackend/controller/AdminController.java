@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/admin")
@@ -57,6 +59,58 @@ public class AdminController {
 
         List<SurveyResponseDto> all = surveyService.getAllSurveyResponses();
         return ResponseEntity.ok(all);
+    }
+
+    @GetMapping("/matching/result")
+    public ResponseEntity<?> getMatchingResult(HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        String role = jwtUtil.getRole(token);
+        if (!"ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.status(403).body("권한 없음");
+        }
+
+        List<UserEntity> matchedUsers = userRepository.findAll()
+                .stream()
+                .filter(u -> u.getTeamNumber() != null)
+                .collect(Collectors.toList());
+
+        Map<Integer, List<Map<String, String>>> grouped = matchedUsers.stream()
+                .collect(Collectors.groupingBy(
+                        UserEntity::getTeamNumber,
+                        Collectors.mapping(user -> Map.of(
+                                "name", user.getName(),
+                                "studentId", user.getStudentId()
+                        ), Collectors.toList())
+                ));
+
+        List<Map<String, Object>> teamList = grouped.entrySet().stream()
+                .map(entry -> Map.of(
+                        "teamNumber", entry.getKey(),
+                        "members", entry.getValue()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of("teams", teamList));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        String role = jwtUtil.getRole(token);
+
+        if (!"ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.status(403).body("권한 없음");
+        }
+
+        List<Map<String, Object>> users = userRepository.findAll().stream()
+                .map(user -> Map.of(
+                        "name", user.getName(),
+                        "studentId", user.getStudentId(),
+                        "teamNumber", (Object) user.getTeamNumber()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of("users", users));
     }
 }
 
