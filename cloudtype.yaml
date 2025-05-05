@@ -1,0 +1,12 @@
+name: meltin-backend
+app:
+  runtime:
+    type: jvm
+    version: 17
+  build:
+    buildCommand: "./mvnw clean package -DskipTests"
+    artifacts:
+      - target/*.jar
+  run:
+    command: "java -jar target/meltinbackend-0.0.1-SNAPSHOT.jar"
+    port: 8080
