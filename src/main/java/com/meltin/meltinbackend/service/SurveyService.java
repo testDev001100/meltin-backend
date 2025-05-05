@@ -4,14 +4,12 @@ import com.meltin.meltinbackend.dto.SurveyRequestDto;
 import com.meltin.meltinbackend.dto.SurveyResponseDto;
 import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
-import com.meltin.meltinbackend.jwt.JWTUtil;
 import com.meltin.meltinbackend.repository.SurveyResponseRepository;
 import com.meltin.meltinbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +20,8 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final SurveyResponseRepository surveyResponseRepository;
-    private final JWTUtil jwtUtil;
 
-    public ResponseEntity<String> submitSurvey(String token, SurveyRequestDto dto) {
-        String username = jwtUtil.extractUsername(token);
+    public ResponseEntity<String> submitSurvey(String username, SurveyRequestDto dto) {
         UserEntity user = userRepository.findByUsername(username);
 
         if (user == null) {
@@ -45,7 +41,7 @@ public class SurveyService {
         response.setConflictResponse(dto.getConflictResponse());
         response.setPreferredRole(dto.getPreferredRole());
         response.setPreferredTeamMood(dto.getPreferredTeamMood());
-        response.setSelfKeywords(String.join(",", dto.getSelfKeywords())); // ✅ CSV 저장
+        response.setSelfKeywords(String.join(",", dto.getSelfKeywords())); // CSV 형식
         response.setMatchingPreference(dto.getMatchingPreference());
 
         surveyResponseRepository.save(response);
