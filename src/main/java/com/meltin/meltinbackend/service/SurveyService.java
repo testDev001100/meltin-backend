@@ -1,6 +1,7 @@
 package com.meltin.meltinbackend.service;
 
 import com.meltin.meltinbackend.dto.SurveyRequestDto;
+import com.meltin.meltinbackend.dto.SurveyResponseDto;
 import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
 import com.meltin.meltinbackend.jwt.JWTUtil;
@@ -11,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +50,24 @@ public class SurveyService {
 
         surveyResponseRepository.save(response);
         return ResponseEntity.ok("설문 제출 성공");
+    }
+
+    public List<SurveyResponseDto> getAllSurveyResponses() {
+        List<SurveyResponseEntity> responses = surveyResponseRepository.findAll();
+
+        return responses.stream()
+                .map(r -> new SurveyResponseDto(
+                        r.getUser().getName(),
+                        r.getUser().getStudentId(),
+                        r.getMbti(),
+                        r.getCommunicationStyle(),
+                        r.getConflictResponse(),
+                        r.getPreferredRole(),
+                        r.getPreferredTeamMood(),
+                        r.getInterests(),
+                        r.getSelfKeywords(),
+                        r.getMatchingPreference()
+                ))
+                .collect(Collectors.toList());
     }
 }

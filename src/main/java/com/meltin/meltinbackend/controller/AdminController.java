@@ -1,5 +1,6 @@
 package com.meltin.meltinbackend.controller;
 
+import com.meltin.meltinbackend.dto.SurveyResponseDto;
 import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
 import com.meltin.meltinbackend.jwt.JWTUtil;
@@ -7,6 +8,8 @@ import com.meltin.meltinbackend.repository.SurveyResponseRepository;
 import com.meltin.meltinbackend.repository.UserRepository;
 import com.meltin.meltinbackend.service.GptService;
 import com.meltin.meltinbackend.service.GroupService;
+import com.meltin.meltinbackend.service.SurveyService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ public class AdminController {
     private final GroupService groupService;
     private final GptService gptService;
     private final JWTUtil jwtUtil;
+    private final SurveyService surveyService;
 
     @PostMapping("/match")
     public ResponseEntity<String> match(@RequestHeader("Authorization") String token) {
@@ -42,4 +46,17 @@ public class AdminController {
         return ResponseEntity.ok("그룹핑 완료");
     }
 
+    @GetMapping("/surveys")
+    public ResponseEntity<?> getAllSurveys(HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        String role = jwtUtil.getRole(token);
+
+        if (!"ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.status(403).body("권한 없음");
+        }
+
+        List<SurveyResponseDto> all = surveyService.getAllSurveyResponses();
+        return ResponseEntity.ok(all);
+    }
 }
+
