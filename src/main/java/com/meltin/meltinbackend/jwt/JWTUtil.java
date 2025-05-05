@@ -1,5 +1,7 @@
 package com.meltin.meltinbackend.jwt;
 
+import com.meltin.meltinbackend.entity.UserEntity;
+import com.meltin.meltinbackend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +18,16 @@ import java.util.Base64;
 @Component
 public class JWTUtil {
 
+    private final UserRepository userRepository;
+
+    private SecretKey secretKey;
+
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret, UserRepository userRepository) {
+
+        System.out.println("JWT secret key = " + secret);
+        this.userRepository = userRepository;
+
+        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     private final SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
@@ -72,6 +84,19 @@ public class JWTUtil {
         return expiration.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+    }
+
+    public UserEntity getUserFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        String username = getUsername(token);
+        UserEntity user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new RuntimeException("해당 사용자를 찾을 수 없습니다.");
+        }
+        return user;
     }
 
     // Request의 Authorization 헤더에서 Bearer 토큰 추출
