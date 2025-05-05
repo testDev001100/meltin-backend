@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
-    private final BlacklistedTokenRepository blacklistedTokenRepository; // ✅ 이거 반드시 있어야 함
+    private final BlacklistedTokenRepository blacklistedTokenRepository;
 
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, UserRepository userRepository, BlacklistedTokenRepository blacklistedTokenRepository) {
@@ -62,7 +62,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500")); //데이터보냄
+                        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));

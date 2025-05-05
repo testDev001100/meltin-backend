@@ -32,6 +32,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String token = jwtUtil.resolveToken(request);
 
+        System.out.println("토큰: " + token);
+        System.out.println("토큰 유효성 검사 결과: " + jwtUtil.validateToken(token));
+        System.out.println("SecurityContext 인증 객체: " + SecurityContextHolder.getContext().getAuthentication());
+
         // 토큰 존재 + 유효한 경우에만 처리
         if (token != null && jwtUtil.validateToken(token)) {
 
