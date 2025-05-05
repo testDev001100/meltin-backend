@@ -37,7 +37,9 @@ public class GptService {
                     dto.getSelfKeyword(), dto.getMatchingPreference()
                     ));
         }
-        prompt.append("\n출력 형식:\nTeam 1: 이름1, 이름2, ...\nTeam 2: ...");
+        prompt.append("\n출력 형식:\nTeam 1: 이름1, 이름2, 이름3, 이름4\nTeam 2: ...\n")
+                .append("단, 인원수가 4의 배수가 아니면 나머지는 3명 또는 2명으로 팀을 구성해주세요.\n")
+                .append("혼자 남는 팀은 만들지 말고 가능한 균형 있게 구성해주세요.");
         return prompt.toString();
     }
 
