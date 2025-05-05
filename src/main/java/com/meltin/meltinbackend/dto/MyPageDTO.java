@@ -9,4 +9,5 @@ public class MyPageDTO {
     private String username;
     private String studentId;
     private String name;
+    private String role;
 }

@@ -137,6 +137,7 @@ public class AdminController {
         MyPageDTO dto = new MyPageDTO(
                 admin.getUsername(),
                 admin.getStudentId(),
+                admin.getName(),
                 admin.getRole()
         );
 
