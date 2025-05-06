@@ -1,17 +1,23 @@
 package com.meltin.meltinbackend.service;
 
+import com.meltin.meltinbackend.entity.SurveyResponseEntity;
 import com.meltin.meltinbackend.entity.UserEntity;
+import com.meltin.meltinbackend.repository.SurveyResponseRepository;
 import com.meltin.meltinbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GroupService {
 
     private final UserRepository userRepository;
+    private final SurveyResponseRepository surveyResponseRepository;
+    private final GptService gptService;
 
     public void applyGroupingResult(String gptResponse) {
         String[] lines = gptResponse.split("\\n");
@@ -30,5 +36,19 @@ public class GroupService {
                 }
             }
         }
+    }
+    public void matchEligibleUsers() {
+        List<UserEntity> matchingCandidates = userRepository.findAll().stream()
+                .filter(user -> "ROLE_USER".equals(user.getRole()) && user.getTeamNumber() == null)
+                .collect(Collectors.toList());
+
+        List<SurveyResponseEntity> responses = surveyResponseRepository.findAll().stream()
+                .filter(res -> matchingCandidates.contains(res.getUser()))
+                .collect(Collectors.toList());
+
+        String prompt = gptService.createPrompt(responses);
+        String gptResponse = gptService.callGpt(prompt);
+
+        applyGroupingResult(gptResponse);
     }
 }

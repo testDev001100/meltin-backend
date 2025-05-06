@@ -48,6 +48,8 @@ public class AdminController {
         String gptResponse = gptService.callGpt(prompt);
         groupService.applyGroupingResult(gptResponse);
 
+        groupService.matchEligibleUsers();
+
         return ResponseEntity.ok("그룹핑 완료");
     }
 
@@ -108,12 +110,12 @@ public class AdminController {
         List<Map<String, Object>> users = userRepository.findAll().stream()
                 .map(user -> {
                     Map<String, Object> userMap = new java.util.HashMap<>();
-                    userMap.put("name", user.getName() != null ? user.getName() : "-");
-                    userMap.put("studentId", user.getStudentId() != null ? user.getStudentId() : "-");
-                    userMap.put("teamNumber", user.getTeamNumber() != null ? user.getTeamNumber() : "-");
+                    userMap.put("name", user.getName());
+                    userMap.put("studentId", user.getStudentId());
+                    userMap.put("teamNumber", user.getTeamNumber());  // null 그대로 전달
                     return userMap;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity.ok(Map.of("users", users));
     }
