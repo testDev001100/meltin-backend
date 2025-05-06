@@ -111,6 +111,7 @@ public class AdminController {
                 .map(user -> {
                     Map<String, Object> userMap = new java.util.HashMap<>();
                     userMap.put("name", user.getName());
+                    userMap.put("username", user.getUsername());
                     userMap.put("studentId", user.getStudentId());
                     userMap.put("teamNumber", user.getTeamNumber());  // null 그대로 전달
                     return userMap;
