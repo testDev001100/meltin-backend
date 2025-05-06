@@ -44,6 +44,9 @@ public class JWTUtil {
     }
 
     public String getUsername(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         return getClaims(token).get("username", String.class);
     }
 
@@ -52,6 +55,9 @@ public class JWTUtil {
     }
 
     public String getRole(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         return getClaims(token).get("role", String.class);
     }
 

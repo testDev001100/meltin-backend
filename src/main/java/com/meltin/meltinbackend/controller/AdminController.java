@@ -106,11 +106,13 @@ public class AdminController {
         }
 
         List<Map<String, Object>> users = userRepository.findAll().stream()
-                .map(user -> Map.of(
-                        "name", user.getName(),
-                        "studentId", user.getStudentId(),
-                        "teamNumber", (Object) user.getTeamNumber()
-                ))
+                .map(user -> {
+                    Map<String, Object> userMap = new java.util.HashMap<>();
+                    userMap.put("name", user.getName() != null ? user.getName() : "-");
+                    userMap.put("studentId", user.getStudentId() != null ? user.getStudentId() : "-");
+                    userMap.put("teamNumber", user.getTeamNumber() != null ? user.getTeamNumber() : "-");
+                    return userMap;
+                })
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(Map.of("users", users));
