@@ -104,6 +104,6 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JWTFilter(jwtUtil, userRepository, blacklistedTokenRepository), LoginFilter.class);
 
-        return  http.build();
+        return  http.build();  
     }
 }
